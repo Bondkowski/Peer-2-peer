@@ -62,19 +62,15 @@ public class ChatServer {
             mH.run();
 
             while (true) {
-                int queueSize = executorService.getQueue().size();
                 Socket listeningSocket = mainSocket.accept();
                 DataOutputStream responseToClient = new DataOutputStream(listeningSocket.getOutputStream());
                 //limiting the queue of clients waiting for the thread by 10.
                 //In total we will have 20: 10 working threads and 10 clients in the queue.
                 //All other client will be discarded with message
-                if(queueSize > 10) {
-                    responseToClient.writeBytes("Server is overloaded... Sorry!\n");
-                }else {
+
                     ChatThread c = new ChatThread(listeningSocket,server);
                     addChatClient(c);
                 }
-            }
         }catch(Exception e){
             System.err.println(e);
             e.printStackTrace();
